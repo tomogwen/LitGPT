@@ -1,0 +1,6 @@
+__pycache__/
+hpc-gpt/
+data/
+wandb/
+.DS_Store
+tokenised.pt
