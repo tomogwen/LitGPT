@@ -11,7 +11,9 @@
 # Enable shell debugging
 set -x
 
-# Load modules
+# Load modules if present on cluster, e.g.:
+# module purge
+# module load torchvision
 
 # Set up venv
 python -m venv --system-site-packages min-gpt-train
