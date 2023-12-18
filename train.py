@@ -42,7 +42,6 @@ class TinyShakespeareDataModule(L.LightningDataModule):
 
             data = torch.tensor(encode(text), dtype=torch.long)
             torch.save(data, 'data/tokenised.pt')
-            
 
     def setup(self, stage):
         # runs on every GPU
