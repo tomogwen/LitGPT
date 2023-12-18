@@ -100,5 +100,7 @@ if __name__ == '__main__':
     wandb_logger = WandbLogger(log_model="all", project="hpc-gpt")
 
     # train model
-    trainer = L.Trainer(accelerator="gpu", devices=3, num_nodes=2, strategy="ddp", logger=wandb_logger, max_epochs=10)
+    num_devices = 2
+    gpus_per_device = 2 
+    trainer = L.Trainer(accelerator="gpu", devices=num_devices, num_nodes=gpus_per_device, strategy="ddp", logger=wandb_logger, max_epochs=10)
     trainer.fit(model=litgpt, datamodule=data_module)

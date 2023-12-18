@@ -5,6 +5,7 @@ A minimal working example of multi-node, multi-GPU training using PyTorch Lightn
 ## Usage
 
 - Set the variables required in `train.sh` (your Slurm account details, required number of nodes and GPUs, and Wandb API key)
+- Update the number of nodes and GPUs in `train.py` to match `train.sh`.
 - Run `sbatch train.sh` on your Slurm cluster.
 - Alternatively, run `python train.py` on any device.
 
