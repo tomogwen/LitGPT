@@ -23,11 +23,13 @@ class TinyShakespeareDataSet(Dataset):
 
 
 class TinyShakespeareDataModule(L.LightningDataModule):
-    def __init__(self, data_dir, batch_size=32, train_test_split=0.95):
+    def __init__(self, data_dir, train_dataloader_workers=10, val_dataloader_workers=10, batch_size=32, train_test_split=0.95):
         super().__init__()
         self.data_dir = data_dir
         self.batch_size = batch_size
         self.train_test_split = train_test_split
+        self.train_dataloader_workers = train_dataloader_workers
+        self.val_dataloader_workers = val_dataloader_workers
 
     def prepare_data(self):
         # runs once, called from main process
@@ -54,10 +56,10 @@ class TinyShakespeareDataModule(L.LightningDataModule):
 
     def train_dataloader(self):
         # lightning should auto-add DistributedSampler for these dataloaders when required
-        return DataLoader(self.train_data, batch_size=self.batch_size, num_workers=35, persistent_workers=True)
+        return DataLoader(self.train_data, batch_size=self.batch_size, num_workers=self.train_dataloader_workers, persistent_workers=True)
     
     def val_dataloader(self):
-        return DataLoader(self.val_data, batch_size=self.batch_size, num_workers=35, persistent_workers=True)
+        return DataLoader(self.val_data, batch_size=self.batch_size, num_workers=self.val_dataloader_workers, persistent_workers=True)
 
 
 class LitMinGPT(L.LightningModule):
@@ -84,8 +86,9 @@ class LitMinGPT(L.LightningModule):
 
 
 if __name__ == '__main__':
-    # drop f32 precision for tensor cores
-    torch.set_float32_matmul_precision('high')
+    
+    accelerator = "mps"
+    logging = None
 
     # data module
     data_module = TinyShakespeareDataModule("data/tinyshakespeare.txt")
@@ -96,11 +99,24 @@ if __name__ == '__main__':
     model = TransformerDecoder()
     litgpt = LitMinGPT(model)
 
-    # weights and biases
-    wandb_logger = WandbLogger(log_model="all", project="hpc-gpt")
+    if logging == 'wandb':
+        # weights and biases
+        wandb_logger = WandbLogger(log_model="all", project="hpc-gpt")
+        logger = wandb_logger
+    else:
+        logger = None
 
-    # train model
-    num_devices = 2
-    gpus_per_device = 2 
-    trainer = L.Trainer(accelerator="gpu", devices=num_devices, num_nodes=gpus_per_device, strategy="ddp", logger=wandb_logger, max_epochs=10)
+    if accelerator == "gpu":
+        # drop f32 precision for tensor cores
+        torch.set_float32_matmul_precision('high')
+        
+        # train model
+        num_devices = 2
+        gpus_per_device = 2 
+
+        trainer = L.Trainer(accelerator="gpu", devices=num_devices, num_nodes=gpus_per_device, strategy="ddp", logger=logger, max_epochs=10)
+    else:
+        # auto-choose accelerator
+        trainer = L.Trainer(logger=logger, max_epochs=10)
+
     trainer.fit(model=litgpt, datamodule=data_module)
