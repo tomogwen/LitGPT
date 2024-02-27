@@ -1,6 +1,6 @@
 # Slurmformer
 
-This repo contains my efforts to learn how to train models with PyTorch Lightning. It currently has a minimal working example ofprf multi-node, multi-GPU training using PyTorch Lightning on Slurm. The model being trained is an implementation of Kaparthy's [minGPT](https://github.com/karpathy/minGPT).
+This repo contains my efforts to learn how to train models with PyTorch Lightning. It currently has a minimal working example of multi-node, multi-GPU training for Kaparthy's [minGPT](https://github.com/karpathy/minGPT) on a Slurm cluster.
 
 ## Goal
 
