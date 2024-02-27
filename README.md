@@ -7,7 +7,7 @@ This repo contains my efforts to learn how to train models with PyTorch Lightnin
 I'd ultimately like this repo to be an example of a production deep learning repo following best practices.
 
 The following are (I believe) devops'y questions with that goal in mind:
-- [ ] Have a directory structure that represents best practices.
+- [ ] Have a reasonable directory structure.
     - What should be top-level, what should be in `src`?
     - If e.g., `data` is top-level and `train.py` is in `src`, how does `train.py` see the data?
 - [ ] Have a conda env installer, including installing a python package locally.
