@@ -27,7 +27,7 @@ I will hopefully add more to this as I go!
 
 ## Installation
 
-To install dependencies in a conda environment and activitate it run the following.
+To install dependencies in a conda environment and activate it run the following.
 
 ```
 > conda env create -f env.yml
