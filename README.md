@@ -27,11 +27,17 @@ I will hopefully add more to this as I go!
 
 ## Installation
 
-To install dependencies in a conda environment and activate it run the following.
-
+To install dependencies:
 ```
 > conda env create -f env.yml
+```
+
+## Usage
+
+To train the model locally:
+```
 > conda activate litmingpt
+> train
 ```
 
 ## Usage (slurm, outdated)
