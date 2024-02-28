@@ -7,9 +7,8 @@ This repo contains my efforts to learn how to create a (better than research cod
 Some things that I'd like to learn whilst creating this repo are:
 
 Software Development:
-- [ ] Setup github actions, including automated pre-commits and CI.
-    - How do actions work?
-    - What do good tests look like for deep learning repos?
+- [ ] Setup github actions.
+- [ ] Write good tests.
 - [ ] Where should train scripts go?
 - [X] 'Packagify' the code.
 - [X] Have a conda env installer.
