@@ -1,5 +1,5 @@
 [![Pre-commit](https://github.com/tomogwen/LitGPT/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/tomogwen/LitGPT/actions/workflows/pre-commit.yml)&nbsp;&nbsp;[![Tests](https://github.com/tomogwen/LitGPT/actions/workflows/tests.yml/badge.svg)](https://github.com/tomogwen/LitGPT/actions/workflows/tests.yml)
-# Lightning GPT
+# Pytorch Lightning Minimal GPT
 
 This repo contains my efforts to learn how to create a (better than research code, aspiring to production quality) deep learning repository. It trains an implementation of Kaparthy's [minGPT](https://github.com/karpathy/minGPT) in PyTorch Lightning.
 
@@ -8,12 +8,11 @@ This repo contains my efforts to learn how to create a (better than research cod
 Some things that I'd like to learn whilst creating this repo are:
 
 Software Development:
-- [ ] Write tests.
-- [X] Where should train scripts go?
-- [X] Setup pre-commit checks.
 - [X] Setup github actions.
+- [X] Writing tests.
+- [X] Setup pre-commit checks.
 - [X] 'Packagify' the code.
-- [X] Have a conda env installer.
+- [X] Good repo structure.
 
 Deep Learning:
 - [ ] Deal with hyperparams nicely
