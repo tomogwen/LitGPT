@@ -4,8 +4,8 @@ import torch
 import lightning as L
 from pytorch_lightning.loggers import WandbLogger
 
-from mingpt.data import TinyShakespeareDataModule
-from mingpt.model import TransformerDecoder, LitMinGPT
+from litmingpt.data import TinyShakespeareDataModule
+from litmingpt.model import TransformerDecoder, LitMinGPT
 
 
 if __name__ == '__main__':

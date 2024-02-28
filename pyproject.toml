@@ -1,0 +1,13 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "litmingpt"
+version = "0.0.1"
+description = "Lightning MinGPT Implementation"
+readme = "README.md"
+
+[project.urls]
+Source = "https://github.com/tomogwen/litmingpt"
+Issues = "https://github.com/tomogwen/litmingpt/issues"

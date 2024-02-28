@@ -1,5 +1,7 @@
 # Torch Dataset and LightningDataModule wrapper for the Tiny Shakespeare dataset
 
+import os
+
 import lightning as L
 import torch
 from torch.utils.data import Dataset, DataLoader
@@ -20,9 +22,11 @@ class TinyShakespeareDataSet(Dataset):
 
 
 class TinyShakespeareDataModule(L.LightningDataModule):
-    def __init__(self, data_dir, train_dataloader_workers=10, val_dataloader_workers=10, batch_size=32, train_test_split=0.95):
+    def __init__(self, dataset_path, train_dataloader_workers=10, val_dataloader_workers=10, batch_size=32, train_test_split=0.95):
         super().__init__()
-        self.data_dir = data_dir
+        self.dataset_path = os.path.abspath(dataset_path)
+        self.data_dir = os.path.dirname(self.dataset_path)
+        self.tokenised_path = os.path.join(self.data_dir, 'tokenised.pt')
         self.batch_size = batch_size
         self.train_test_split = train_test_split
         self.train_dataloader_workers = train_dataloader_workers
@@ -31,7 +35,7 @@ class TinyShakespeareDataModule(L.LightningDataModule):
     def prepare_data(self):
         # runs once, called from main process
         # tokenise data here
-        with open(self.data_dir, 'r', encoding='utf-8') as f:
+        with open(self.dataset_path, 'r', encoding='utf-8') as f:
             text = f.read()
             chars = sorted(list(set(text)))
         
@@ -40,12 +44,12 @@ class TinyShakespeareDataModule(L.LightningDataModule):
                 return [stoi[c] for c in s]  # encoder: maps strings to list of ints
 
             data = torch.tensor(encode(text), dtype=torch.long)
-            torch.save(data, 'data/tokenised.pt')
+            torch.save(data, self.tokenised_path)
 
     def setup(self, stage):
         # runs on every GPU
         # stage is e.g., "fit", "test"
-        data = torch.load('data/tokenised.pt')
+        data = torch.load(self.tokenised_path)
 
         n = int(self.train_test_split*len(data))
         self.train_data = TinyShakespeareDataSet(data[:n])
