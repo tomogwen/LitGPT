@@ -20,12 +20,9 @@ jobs:
         auto-activate-base: false
     - name: Install dependencies
       run: |
-        echo "Listing installed packages"
         conda list
     - name: Activate Conda environment and run tests
       shell: bash -l {0}
       run: |
-        echo "Activating environment"
         conda activate litgpt
-        echo "Running tests with pytest"
         pytest
