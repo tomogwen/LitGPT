@@ -1,4 +1,4 @@
-# Kaparthy's Min-GPT with a Lightning wrapper
+# Training minGPT with Lightning
 
 import lightning as L
 import torch
