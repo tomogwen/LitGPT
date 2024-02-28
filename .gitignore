@@ -1,5 +1,4 @@
 __pycache__/
-hpc-gpt/
 wandb/
 lightning_logs/
 .DS_Store
