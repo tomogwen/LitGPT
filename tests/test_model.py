@@ -13,19 +13,16 @@ BLOCK_SIZE = 256
 
 @pytest.fixture
 def sample_input():
-    # Create a sample input tensor (batch of indices)
     return torch.randint(low=0, high=VOCAB_SIZE, size=(BATCH_SIZE, BLOCK_SIZE))
 
 
 @pytest.fixture
 def transformer_decoder():
-    # Instantiate your TransformerDecoder model
     return TransformerDecoder()
 
 
 @pytest.fixture
 def lit_mingpt(transformer_decoder):
-    # Instantiate your LitMinGPT model
     return LitMinGPT(transformer_decoder=transformer_decoder)
 
 
