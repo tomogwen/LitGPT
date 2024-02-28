@@ -2,6 +2,5 @@ __pycache__/
 hpc-gpt/
 wandb/
 lightning_logs/
-*.egg-info
 .DS_Store
 tokenised.pt
