@@ -32,8 +32,6 @@ def test_tiny_shakespeare_dataset():
 @pytest.fixture
 def sample_data_module():
     dummy_dataset_path = os.path.abspath("tests/sample_data/sample.txt")
-    ##dummy_tokenised_path = os.path.join(dummy_data_dir, "sample_tokenised.pt")
-    # dummy_data_dir = os.path.dirname(dummy_dataset_path)
 
     data_module = TinyShakespeareDataModule(
         dataset_path=dummy_dataset_path,
