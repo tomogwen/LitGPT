@@ -8,8 +8,7 @@ from litmingpt.data import TinyShakespeareDataModule
 from litmingpt.model import TransformerDecoder, LitMinGPT
 
 
-if __name__ == '__main__':
-    
+def main():
     accelerator = "mps"
     logging = None
 
@@ -43,3 +42,7 @@ if __name__ == '__main__':
         trainer = L.Trainer(logger=logger, max_epochs=10)
 
     trainer.fit(model=litgpt, datamodule=data_module)
+
+
+if __name__ == '__main__':
+    main()

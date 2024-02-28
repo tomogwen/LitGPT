@@ -8,6 +8,9 @@ version = "0.0.1"
 description = "Lightning MinGPT Implementation"
 readme = "README.md"
 
+[project.scripts]
+train = "litmingpt.train:main"
+
 [project.urls]
 Source = "https://github.com/tomogwen/litmingpt"
 Issues = "https://github.com/tomogwen/litmingpt/issues"
