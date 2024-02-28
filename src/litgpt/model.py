@@ -17,6 +17,10 @@ BLOCK_SIZE = 256  # maximum context length for the transformer (max T)
 DROPOUT = 0.2  # propo of dropout
 
 
+# trigger tests
+print("hi")
+
+
 class Head(nn.Module):
     """One head of self-attention"""
 

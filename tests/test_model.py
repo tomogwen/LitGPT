@@ -26,10 +26,6 @@ def lit_mingpt(transformer_decoder):
     return LitMinGPT(transformer_decoder=transformer_decoder)
 
 
-# trigger tests
-print("hi")
-
-
 # Tests for TransformerDecoder
 def test_transformer_decoder_forward(transformer_decoder, sample_input):
     # Test the forward pass
