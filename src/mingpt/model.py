@@ -1,6 +1,8 @@
-# Minimal GPT
-# From Kaparthy's Zero-to-Hero NN course
+# Minimal GPT model, includes:
+# - Torch implementation from Kaparthy's Zero-to-Hero NN course
+# - PyTorch Lightning wrapper for the model
 
+import lightning as L
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
@@ -139,3 +141,26 @@ class TransformerDecoder(nn.Module):
             idx_next = torch.multinomial(probs, num_samples=1)  # (B, T+1) - samples from across C for each batch
             idx = torch.concat((idx, idx_next), dim=1)  # becomes (B, T+1) -> adds on next loop
         return idx
+
+
+class LitMinGPT(L.LightningModule):
+    def __init__(self, transformer_decoder):
+        super().__init__()
+        # self.save_hyperparameters()  # don't need to specify for any nn.Module
+        self.decoder = transformer_decoder
+
+    def training_step(self, batch, batch_idx):
+        x, y = batch
+        logits, loss = self.decoder(x, y)
+        self.log("train_loss", loss, sync_dist=True)
+        return loss
+    
+    def validation_step(self, batch, batch_idx):
+        x, y = batch
+        logits, loss = self.decoder(x, y)
+        self.log("val_loss", loss, sync_dist=True)
+        return loss
+
+    def configure_optimizers(self):
+         optimiser = torch.optim.AdamW(self.parameters(), lr=1e-3)
+         return optimiser
