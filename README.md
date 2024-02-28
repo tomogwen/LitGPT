@@ -8,9 +8,10 @@ This repo contains my efforts to learn how to create a (better than research cod
 Some things that I'd like to learn whilst creating this repo are:
 
 Software Development:
-- [ ] Setup github actions.
 - [ ] Write good tests.
-- [ ] Where should train scripts go?
+- [X] Where should train scripts go?
+- [X] Setup pre-commit checks.
+- [X] Setup github actions.
 - [X] 'Packagify' the code.
 - [X] Have a conda env installer.
 
