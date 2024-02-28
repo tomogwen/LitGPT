@@ -35,6 +35,7 @@ class TinyShakespeareDataModule(L.LightningDataModule):
         train_dataloader_workers=10,
         val_dataloader_workers=10,
         batch_size=32,
+        block_size=256,
         train_test_split=0.95,
     ):
         super().__init__()
@@ -42,13 +43,15 @@ class TinyShakespeareDataModule(L.LightningDataModule):
         self.data_dir = os.path.dirname(self.dataset_path)
         self.tokenised_path = os.path.join(self.data_dir, "tokenised.pt")
         self.batch_size = batch_size
+        self.block_size = block_size
         self.train_test_split = train_test_split
         self.train_dataloader_workers = train_dataloader_workers
         self.val_dataloader_workers = val_dataloader_workers
 
-    def prepare_data(self):
+    def prepare_data(self, tokenised_path=None):
         # runs once, called from main process
         # tokenise data here
+
         with open(self.dataset_path, "r", encoding="utf-8") as f:
             text = f.read()
             chars = sorted(list(set(text)))
@@ -67,8 +70,8 @@ class TinyShakespeareDataModule(L.LightningDataModule):
         data = torch.load(self.tokenised_path)
 
         n = int(self.train_test_split * len(data))
-        self.train_data = TinyShakespeareDataSet(data[:n])
-        self.val_data = TinyShakespeareDataSet(data[n:])
+        self.train_data = TinyShakespeareDataSet(data[:n], block_size=self.block_size)
+        self.val_data = TinyShakespeareDataSet(data[n:], block_size=self.block_size)
 
     def train_dataloader(self):
         # lightning should auto-add DistributedSampler for these dataloaders when required

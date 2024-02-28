@@ -1,14 +1,14 @@
 [![Pre-commit](https://github.com/tomogwen/LitGPT/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/tomogwen/LitGPT/actions/workflows/pre-commit.yml)
 # Lightning GPT
 
-This repo contains my efforts to learn how to create a (better than research code, not quite production quality) deep learning repository. It trains an implementation of Kaparthy's [minGPT](https://github.com/karpathy/minGPT) in PyTorch Lightning.
+This repo contains my efforts to learn how to create a (better than research code, aspiring to production quality) deep learning repository. It trains an implementation of Kaparthy's [minGPT](https://github.com/karpathy/minGPT) in PyTorch Lightning.
 
 ## Goal
 
 Some things that I'd like to learn whilst creating this repo are:
 
 Software Development:
-- [ ] Write good tests.
+- [ ] Write tests.
 - [X] Where should train scripts go?
 - [X] Setup pre-commit checks.
 - [X] Setup github actions.
