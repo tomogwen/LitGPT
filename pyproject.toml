@@ -3,13 +3,13 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "litmingpt"
+name = "litgpt"
 version = "0.0.1"
 description = "Minimal GPT Implementation in PyTorch Lightning"
 readme = "README.md"
 
 [project.scripts]
-train = "litmingpt.train:main"
+train = "litgpt.train:main"
 
 [project.urls]
 Source = "https://github.com/tomogwen/litgpt"

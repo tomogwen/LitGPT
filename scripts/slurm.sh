@@ -28,4 +28,4 @@ pip install wandb
 wandb login $WANDB_API_KEY
 
 # run train script
-srun python src/litmingpt/train.py
+srun train

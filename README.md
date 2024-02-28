@@ -4,7 +4,7 @@ This repo contains my efforts to learn how to create a (better than research cod
 
 ## Goal
 
-Some things that I'd like to learn whilst creating this repo are: 
+Some things that I'd like to learn whilst creating this repo are:
 
 Software Development:
 - [ ] Setup github actions, including automated pre-commits and CI.
@@ -32,11 +32,20 @@ To install dependencies:
 > conda env create -f env.yml
 ```
 
+Activate the conda environment:
+```
+> conda activate litgpt
+```
+
+To install pre-commit checks:
+```
+> pre-commit install
+```
+
 ## Usage
 
-To train the model locally:
+To train the model locally (whilst in the conda environment):
 ```
-> conda activate litmingpt
 > train
 ```
 
