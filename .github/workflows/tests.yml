@@ -22,7 +22,7 @@ jobs:
       run: |
         echo "Listing installed packages"
         conda list
-    - name: Activate Conda environment and Run tests
+    - name: Activate Conda environment and run tests
       shell: bash -l {0}
       run: |
         echo "Activating environment"
