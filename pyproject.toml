@@ -5,12 +5,12 @@ build-backend = "hatchling.build"
 [project]
 name = "litmingpt"
 version = "0.0.1"
-description = "Lightning MinGPT Implementation"
+description = "Minimal GPT Implementation in PyTorch Lightning"
 readme = "README.md"
 
 [project.scripts]
 train = "litmingpt.train:main"
 
 [project.urls]
-Source = "https://github.com/tomogwen/litmingpt"
-Issues = "https://github.com/tomogwen/litmingpt/issues"
+Source = "https://github.com/tomogwen/litgpt"
+Issues = "https://github.com/tomogwen/litgpt/issues"
