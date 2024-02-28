@@ -1,6 +1,6 @@
 # Minimal GPT model, includes:
-# - Torch implementation from Kaparthy's Zero-to-Hero NN course
-# - PyTorch Lightning wrapper for the model
+#  - Torch implementation of Kaparthy's minGPT
+#  - Lightning wrapper for the model
 
 import lightning as L
 import torch

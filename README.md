@@ -9,13 +9,17 @@ I'd ultimately like this repo to be an example of a production deep learning rep
 The following are (I believe) devops'y questions with that goal in mind:
 - [ ] Setup github actions, including automated pre-commits and CI.
     - How do actions work?
-    - What should be in `.pre-commit-config.yaml`?
     - What do good tests look like for deep learning repos?
+- [ ] Where should train scripts go?
+- [X] 'Packagify' the code.
+- [X] Have a conda env installer.
 
 The following are more about the deep learning skills for a production quality repo:
 - [ ] Deal with hyperparams nicely
     - Config files + CLI
     - Use an args objects or pass around many hparams?
+- [ ] Deal with different accelerators nicely
+    - should run easily on CPU, MPS, or (multi-)GPU.
 - [ ] Tune hyperparams
     - Understand the effect of tuning different hparams
 
@@ -27,7 +31,7 @@ To install dependencies in a conda environment and activitate it run the followi
 
 ```
 > conda env create -f env.yml
-> conda activate slurmformers
+> conda activate litmingpt
 ```
 
 ## Usage (slurm, outdated)

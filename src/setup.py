@@ -2,9 +2,9 @@
 
 from setuptools import setup
 
-setup(name='MinGPT',
+setup(name='LitMinGPT',
       version='0.1',
       description='Lightning MinGPT Implementation',
       author='Tom Davies',
-      url='https://github.com/tomogwen/slurmformer',
+      url='https://github.com/tomogwen/LitMinGPT',
      )
