@@ -8,7 +8,6 @@ import torch.nn as nn
 from torch.nn import functional as F
 
 # global hyperparams
-# TODO: add these to an args/hparam object
 VOCAB_SIZE = 65
 N_EMBD = 384  # dimension of token embeddings
 N_HEADS = 6  # number of self-attention heads
