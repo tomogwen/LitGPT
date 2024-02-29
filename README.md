@@ -3,41 +3,36 @@
 
 This repo contains my efforts to learn how to create a (better than research code, aspiring to production quality) deep learning repository. It trains an implementation of Kaparthy's [minGPT](https://github.com/karpathy/minGPT) in PyTorch Lightning.
 
+This repo grew out of a minimal example of multi-node, multi-GPU training with PyTorch Lightning on a slurm cluster - if you're interested in that, please see the slurmformer branch.
+
 ## Goal
 
-Some things that I'd like to learn whilst creating this repo are:
+A non-exhaustive list of skills I'd like to learn about via this repo are listed below.
 
-Software Development:
-- [X] Setup github actions.
-- [X] Writing tests.
-- [X] Setup pre-commit checks.
-- [X] 'Packagify' the code.
-- [X] Good repo structure.
-
-Deep Learning:
-- [ ] Deal with hyperparams nicely
+Machine Learning Engineering:
+- [ ] Dealing with hyperparams nicely
     - Config files + CLI
     - Use an args objects or pass around many hparams?
-- [ ] Deal with different accelerators nicely
+- [ ] Dealing with different accelerators nicely
     - should run easily on CPU, MPS, or (multi-)GPU.
-- [ ] Tune hyperparams
-    - Understand the effect of tuning different hparams
 
-I will hopefully add more to this as I go!
+Software development:
+- [ ] Doc strings and type hints
+- [X] Setting up github actions.
+- [X] Writing tests.
+- [X] Setting up pre-commit checks.
+- [X] 'Packagify'-ing code.
+- [X] Having good repo structure.
 
 ## Installation
 
-To install dependencies:
+To install dependencies and activate the conda environment:
 ```
 > conda env create -f env.yml
-```
-
-Activate the conda environment:
-```
 > conda activate litgpt
 ```
 
-To install pre-commit checks:
+If developing, install pre-commit checks:
 ```
 > pre-commit install
 ```

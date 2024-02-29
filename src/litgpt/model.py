@@ -8,6 +8,7 @@ import torch.nn as nn
 from torch.nn import functional as F
 
 # global hyperparams
+# TODO: add these to an args/hparam object
 VOCAB_SIZE = 65
 N_EMBD = 384  # dimension of token embeddings
 N_HEADS = 6  # number of self-attention heads
@@ -51,7 +52,7 @@ class Head(nn.Module):
 
 
 class MultiHeadAttention(nn.Module):
-    """ " Multiple heads of self-attention in parallel"""
+    """Multiple heads of self-attention in parallel"""
 
     def __init__(self, num_heads, head_size):
         super().__init__()
