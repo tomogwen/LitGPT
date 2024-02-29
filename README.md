@@ -2,7 +2,7 @@
 
 A minimal working example of multi-node, multi-GPU training using PyTorch Lightning with Wandb logging on a Slurm cluster. The model being trained is an implementation of Kaparthy's [minGPT](https://github.com/karpathy/minGPT).
 
-This repo is aiming to grow into a (better than research code, aspiring to production quality) example of a deep learning repository - see the [main](https://github.com/tomogwen/LitGPT/tree/main) branch if interested.
+This repo is aiming to grow into a (better than research code, aspiring to production quality) example of a deep learning repository - see the [main branch](https://github.com/tomogwen/LitGPT/tree/main) if interested.
 
 ## Usage
 
