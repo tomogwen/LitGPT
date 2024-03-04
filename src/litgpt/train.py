@@ -9,7 +9,7 @@ from litgpt.model import LitMinGPT, TransformerDecoder
 
 
 def main():
-    accelerator = "mps"
+    accelerator = None
     logging = None
 
     # data module
