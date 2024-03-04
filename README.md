@@ -7,7 +7,7 @@ This repo contains my efforts to learn how to create a (better than research cod
 
 ## Goal
 
-A non-exhaustive list of skills I'd like to learn about via this repo are listed below.
+A non-exhaustive list of skills I'd like to learn or practice with this repo are listed below.
 
 Machine Learning Engineering:
 - [ ] Dealing with hyperparams nicely
