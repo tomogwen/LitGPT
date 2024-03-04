@@ -7,9 +7,9 @@ This repo contains my efforts to learn how to create a (better than research cod
 
 ## Goal
 
-A non-exhaustive list of skills I'd like to learn or practice with this repo are listed below.
+A non-exhaustive list of skills I'd like to learn or practice with this repo are below.
 
-Machine Learning Engineering:
+Machine learning engineering:
 - [ ] Dealing with hyperparams nicely
     - Config files + CLI
     - Use an args objects or pass around many hparams?
