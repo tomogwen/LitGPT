@@ -21,15 +21,17 @@ DROPOUT = 0.2  # propo of dropout
 class Head(nn.Module):
     """One head of self-attention"""
 
-    def __init__(self, head_size):
+    def __init__(self, hparams):
+
         super().__init__()
-        self.key = nn.Linear(N_EMBD, head_size, bias=False)
-        self.query = nn.Linear(N_EMBD, head_size, bias=False)
-        self.value = nn.Linear(N_EMBD, head_size, bias=False)
+        self.key = nn.Linear(self.hparams.N_EMBD, self.hparams.head_size, bias=False)
+        self.query = nn.Linear(self.hparams.N_EMBD, self.hparams.head_size, bias=False)
+        self.value = nn.Linear(self.hparams.N_EMBD, self.hparams.head_size, bias=False)
         self.register_buffer(
-            "tril", torch.tril(torch.ones(BLOCK_SIZE, BLOCK_SIZE))
+            "tril",
+            torch.tril(torch.ones(self.hparams.BLOCK_SIZE, self.hparams.BLOCK_SIZE)),
         )  # non-trainable param
-        self.dropout = nn.Dropout(DROPOUT)
+        self.dropout = nn.Dropout(self.hparams.DROPOUT)
 
     def forward(self, x):
         # keys, queries, values are simply different linear models on the same x
@@ -54,9 +56,9 @@ class Head(nn.Module):
 class MultiHeadAttention(nn.Module):
     """Multiple heads of self-attention in parallel"""
 
-    def __init__(self, num_heads, head_size):
+    def __init__(self, hparams):
         super().__init__()
-        self.heads = nn.ModuleList([Head(head_size) for _ in range(num_heads)])
+        self.heads = nn.ModuleList([Head(hparams) for _ in range(self.hparams.N_HEADS)])
         self.projection = nn.Linear(N_EMBD, N_EMBD)
         self.dropout = nn.Dropout(DROPOUT)
 
@@ -69,13 +71,13 @@ class MultiHeadAttention(nn.Module):
 class FeedForward(nn.Module):
     """linear layer + non-linearity"""
 
-    def __init__(self, n_embd):
+    def __init__(self, hparams):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(n_embd, 4 * n_embd),
+            nn.Linear(self.hparams.N_EMBD, 4 * self.hparams.N_EMBD),
             nn.ReLU(),
             nn.Linear(
-                4 * n_embd, n_embd
+                4 * self.hparams.N_EMBD, self.hparams.N_EMBD
             ),  # projection layer? 'going back into the residual pathway'?
             nn.Dropout(DROPOUT),
         )
@@ -87,13 +89,15 @@ class FeedForward(nn.Module):
 class Block(nn.Module):
     """Transformer block: communication then computation"""
 
-    def __init__(self, n_embd, n_heads):
+    def __init__(self, hparams):
         super().__init__()
-        head_size = n_embd // n_heads
-        self.sa = MultiHeadAttention(n_heads, head_size)
-        self.ffwd = FeedForward(n_embd)
-        self.ln1 = nn.LayerNorm(n_embd)
-        self.ln2 = nn.LayerNorm(n_embd)
+
+        self.head_size = self.hparams.N_EMBD // self.hparams.N_HEADS
+
+        self.sa = MultiHeadAttention(self.hparams.N_HEADS, self.head_size)
+        self.ffwd = FeedForward(self.hparams.N_EMBD)
+        self.ln1 = nn.LayerNorm(self.hparams.N_EMBD)
+        self.ln2 = nn.LayerNorm(self.hparams.N_EMBD)
 
     def forward(self, x):
         # layernorm added before transformations now (different to original paper)
@@ -104,17 +108,26 @@ class Block(nn.Module):
 
 
 class TransformerDecoder(nn.Module):
-    def __init__(self):
+    def __init__(self, hparams):
         super().__init__()
+        # hparams needs: N_EMBD, BLOCK_SIZE, DROPOUT, head_size, VOCAB_SIZE, NUM_BLOCKS
+        self.hparams = hparams
 
-        self.token_embedding_table = nn.Embedding(VOCAB_SIZE, N_EMBD)
-        self.position_embedding_table = nn.Embedding(BLOCK_SIZE, N_EMBD)
+        self.token_embedding_table = nn.Embedding(
+            self.hparams.VOCAB_SIZE, self.hparams.N_EMBD
+        )
+        self.position_embedding_table = nn.Embedding(
+            self.hparams.BLOCK_SIZE, self.hparams.N_EMBD
+        )
 
         self.blocks = nn.Sequential(
-            *[Block(N_EMBD, N_HEADS) for _ in range(NUM_BLOCKS)]
+            *[
+                Block(self.hparams.N_EMBD, self.hparams.N_HEADS)
+                for _ in range(self.hparams.NUM_BLOCKS)
+            ]
         )
-        self.ln_f = nn.LayerNorm(N_EMBD)
-        self.lm_head = nn.Linear(N_EMBD, VOCAB_SIZE)
+        self.ln_f = nn.LayerNorm(self.hparams.N_EMBD)
+        self.lm_head = nn.Linear(self.hparams.N_EMBD, self.hparams.VOCAB_SIZE)
 
     def forward(self, idx, targets=None):
         B, T = idx.shape
