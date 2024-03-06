@@ -1,5 +1,4 @@
 # lightning.pytorch==2.2.0.post0
-seed_everything: true
 trainer:
   max_epochs: 10
 model:
