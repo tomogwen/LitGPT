@@ -5,25 +5,6 @@ This repo contains my efforts to learn how to create a (better than research cod
 
 **MWE:** The code here grew out of a minimal example of multi-node, multi-GPU training with PyTorch Lightning on a slurm cluster - if you're interested in that, please see the [slurmformer branch](https://github.com/tomogwen/LitGPT/tree/slurmformer).
 
-## Goal
-
-A non-exhaustive list of skills I'd like to learn about via this repo are listed below.
-
-Machine Learning Engineering:
-- [ ] Dealing with hyperparams nicely
-    - Config files + CLI
-    - Use an args objects or pass around many hparams?
-- [ ] Dealing with different accelerators nicely
-    - should run easily on CPU, MPS, or (multi-)GPU.
-
-Software development:
-- [ ] Doc strings and type hints
-- [X] Setting up github actions.
-- [X] Writing tests.
-- [X] Setting up pre-commit checks.
-- [X] 'Packagify'-ing code.
-- [X] Having good repo structure.
-
 ## Installation
 
 To install dependencies and activate the conda environment:
@@ -55,10 +36,3 @@ This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightn
 ```
 litgpt fit --help
 ```
-
-## Usage (slurm, outdated)
-
-- Set the variables required in `train.sh` (your Slurm account details, required number of nodes and GPUs, and Wandb API key)
-- Update the number of nodes and GPUs in `train.py` to match `train.sh`.
-- Run `sbatch train.sh` on your Slurm cluster.
-- Alternatively, run `python train.py` on any device.
