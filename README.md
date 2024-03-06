@@ -36,4 +36,6 @@ This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightn
 
 A shell script for Slurm HPC's is available. Set the required variables in the shell script, and run:
 
-```sbatch scripts/train.sh```
+```
+sbatch scripts/train.sh
+```
