@@ -3,8 +3,8 @@ seed_everything: true
 trainer:
   max_epochs: 100
   accelerator: gpu
-  devices: 2  # number devices
-  num_nodes: 2  # number gpus per device
+  num_nodes: 2
+  devices: 2  # devices per node
   strategy: ddp
   logger:
     class_path: pytorch_lightning.loggers.WandbLogger
