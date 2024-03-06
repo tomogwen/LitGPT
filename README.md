@@ -20,15 +20,14 @@ pre-commit install
 
 ## Usage
 
-
 To train the model (whilst in the conda environment):
 ```
 litgpt fit --config configs/default.yaml
 ```
 
-You can override and extend the config file using the CLI. Arguments like optimizer and lr_scheduler accept Torch classes, e.g.,:
+You can override and extend the config file using the CLI. Arguments like `--optimizer` and `--lr_scheduler` accept Torch classes. For example:
 ```
-litgpt fit --config configs/default.yaml --optimizer Adam --lr_scheduler CosineAnnealingLR --lr_scheduler.init_args.T_max 100
+litgpt fit --config configs/default.yaml --optimizer Adam
 ```
 
 This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightning_cli_intermediate.html#). Full options can be seen by running:
@@ -36,3 +35,13 @@ This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightn
 ```
 litgpt fit --help
 ```
+
+## Usage (Slurm)
+
+A shell script for Slurm HPC's is available. Set the required variables in the shell script, and run
+
+```
+sbatch scripts/train.sh
+```
+
+The shell script will pass the number of nodes, GPUs and CPUs you've requested from Slurm to the Lightning trainer.
