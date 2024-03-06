@@ -29,9 +29,17 @@ class TinyShakespeareDataSet(Dataset):
 
 
 class TinyShakespeareDataModule(L.LightningDataModule):
-    def __init__(self, hparams):
+    def __init__(
+        self,
+        dataset_path: str = "data/tinyshakespeare.txt",
+        batch_size: int = 32,
+        train_test_split: float = 0.95,
+        train_dataloader_workers: int = 10,
+        val_dataloader_workers: int = 10,
+        BLOCK_SIZE: int = 256,
+    ):
         super().__init__()
-        self.save_hyperparameters(hparams)
+        self.save_hyperparameters()
         data_dir = os.path.dirname(self.hparams.dataset_path)
         self.hparams.tokenised_path = os.path.join(data_dir, "tokenised.pt")
 
@@ -68,7 +76,7 @@ class TinyShakespeareDataModule(L.LightningDataModule):
         # lightning should auto-add DistributedSampler for these dataloaders when required
         return DataLoader(
             self.train_data,
-            batch_size=self.hparams.BATCH_SIZE,
+            batch_size=self.hparams.batch_size,
             num_workers=self.hparams.train_dataloader_workers,
             persistent_workers=True,
         )
@@ -76,7 +84,7 @@ class TinyShakespeareDataModule(L.LightningDataModule):
     def val_dataloader(self):
         return DataLoader(
             self.val_data,
-            batch_size=self.hparams.BATCH_SIZE,
+            batch_size=self.hparams.batch_size,
             num_workers=self.hparams.val_dataloader_workers,
             persistent_workers=True,
         )

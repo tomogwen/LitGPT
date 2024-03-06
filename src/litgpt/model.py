@@ -6,7 +6,6 @@ import lightning as L
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
-from torch.optim.lr_scheduler import CosineAnnealingLR
 
 
 class Head(nn.Module):
@@ -165,9 +164,19 @@ class TransformerDecoder(nn.Module):
 
 
 class LitMinGPT(L.LightningModule):
-    def __init__(self, hparams):
+    def __init__(
+        self,
+        VOCAB_SIZE: int = 65,
+        N_EMBD: int = 384,  # dimension of token embeddings
+        N_HEADS: int = 6,  # number of self-attention heads
+        NUM_BLOCKS: int = 3,  # number of transformer blocks
+        BATCH_SIZE: int = 64,  # how many independent sequences processed in paralell?
+        BLOCK_SIZE: int = 256,  # maximum context length for the transformer (max T)
+        DROPOUT: float = 0.2,  # propo of dropout
+        lr: float = 3e-4,
+    ):
         super().__init__()
-        self.save_hyperparameters(hparams)
+        self.save_hyperparameters()
         self.decoder = TransformerDecoder(self.hparams)
 
     def training_step(self, batch, batch_idx):
@@ -183,15 +192,5 @@ class LitMinGPT(L.LightningModule):
         return loss
 
     def configure_optimizers(self):
-
-        if self.hparams.optimiser_name == "adam":
-            optimizer = torch.optim.AdamW(self.parameters(), lr=self.hparams.lr)
-        else:
-            raise ValueError("Invalid optimiser")
-
-        if self.hparams.scheduler_name == "cosine":
-            scheduler = CosineAnnealingLR(optimizer, T_max=self.hparams.max_epochs)
-        else:  # if scheduler_name is None just return optimiser
-            return optimizer
-        # otherwise scheduler is set and return both
-        return [optimizer], [scheduler]
+        optimizer = torch.optim.AdamW(self.parameters(), lr=self.hparams.lr)
+        return optimizer

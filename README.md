@@ -28,20 +28,32 @@ Software development:
 
 To install dependencies and activate the conda environment:
 ```
-> conda env create -f env.yml
-> conda activate litgpt
+conda env create -f env.yml
+conda activate litgpt
 ```
 
 If developing, install pre-commit checks:
 ```
-> pre-commit install
+pre-commit install
 ```
 
 ## Usage
 
-To train the model locally (whilst in the conda environment):
+
+To train the model (whilst in the conda environment):
 ```
-> train
+litgpt fit --config configs/default.yaml
+```
+
+You can override and extend the config file using the CLI. Arguments like optimizer and lr_scheduler accept Torch classes, e.g.,:
+```
+litgpt fit --config configs/default.yaml --optimizer Adam --lr_scheduler CosineAnnealingLR --lr_scheduler.init_args.T_max 100
+```
+
+This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightning_cli_intermediate.html#). Full options can be seen by running:
+
+```
+litgpt fit --help
 ```
 
 ## Usage (slurm, outdated)

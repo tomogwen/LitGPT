@@ -1,0 +1,20 @@
+# lightning.pytorch==2.2.0.post0
+seed_everything: true
+trainer:
+  max_epochs: 10
+model:
+  VOCAB_SIZE: 65
+  N_EMBD: 384
+  N_HEADS: 6
+  NUM_BLOCKS: 3
+  BATCH_SIZE: 64
+  BLOCK_SIZE: 256
+  DROPOUT: 0.2
+  lr: 0.0003
+data:
+  dataset_path: data/tinyshakespeare.txt
+  batch_size: 32
+  train_test_split: 0.95
+  train_dataloader_workers: 10
+  val_dataloader_workers: 10
+  BLOCK_SIZE: 256

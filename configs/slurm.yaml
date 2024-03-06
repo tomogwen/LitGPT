@@ -1,0 +1,29 @@
+# lightning.pytorch==2.2.0.post0
+seed_everything: true
+trainer:
+  max_epochs: 100
+  accelerator: gpu
+  devices: 2  # number devices
+  num_nodes: 2  # number gpus per device
+  strategy: ddp
+  logger:
+    class_path: pytorch_lightning.loggers.WandbLogger
+    init_args:
+      log_model: all
+      project: litgpt
+model:
+  VOCAB_SIZE: 65
+  N_EMBD: 384
+  N_HEADS: 6
+  NUM_BLOCKS: 3
+  BATCH_SIZE: 64
+  BLOCK_SIZE: 256
+  DROPOUT: 0.2
+  lr: 0.0003
+data:
+  dataset_path: data/tinyshakespeare.txt
+  batch_size: 32
+  train_test_split: 0.95
+  train_dataloader_workers: 10
+  val_dataloader_workers: 10
+  BLOCK_SIZE: 256
