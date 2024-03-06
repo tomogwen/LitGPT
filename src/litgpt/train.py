@@ -9,6 +9,7 @@ from litgpt.model import LitMinGPT
 
 
 def get_hparams():
+    # fmt: off
     return {
         # Program args
         "dataset_path": "data/tinyshakespeare.txt",
@@ -16,6 +17,7 @@ def get_hparams():
         "logging": None,
         "train_dataloader_workers": 10,
         "val_dataloader_workers": 10,
+
         # Model args
         "VOCAB_SIZE": 65,
         "N_EMBD": 384,  # dimension of token embeddings
@@ -24,6 +26,7 @@ def get_hparams():
         "BATCH_SIZE": 64,  # how many independent sequences processed in paralell?
         "BLOCK_SIZE": 256,  # maximum context length for the transformer (max T)
         "DROPOUT": 0.2,  # propo of dropout
+
         # Trainer args
         "max_epochs": 10,
         "optimiser_name": "adam",
@@ -31,7 +34,7 @@ def get_hparams():
         "scheduler_name": None,
         "batch_size": 32,
         "train_test_split": 0.95,
-    }
+    }  # fmt: on
 
 
 def main():
