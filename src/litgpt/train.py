@@ -5,7 +5,7 @@ import torch
 from pytorch_lightning.loggers import WandbLogger
 
 from litgpt.data import TinyShakespeareDataModule
-from litgpt.model import LitMinGPT, TransformerDecoder
+from litgpt.model import Config, LitMinGPT
 
 
 def main():
@@ -18,8 +18,8 @@ def main():
     data_module.setup("train")
 
     # init model
-    model = TransformerDecoder()
-    litgpt = LitMinGPT(model)
+    hparams = Config()
+    litgpt = LitMinGPT(hparams)
 
     if logging == "wandb":
         # weights and biases

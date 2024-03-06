@@ -2,36 +2,52 @@
 #  - Torch implementation of Kaparthy's minGPT
 #  - Lightning wrapper for the model
 
+from dataclasses import dataclass
+
 import lightning as L
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-# global hyperparams
-# TODO: add these to an args/hparam object using litCLI
-VOCAB_SIZE = 65
-N_EMBD = 384  # dimension of token embeddings
-N_HEADS = 6  # number of self-attention heads
-NUM_BLOCKS = 3  # number of transformer blocks
-BATCH_SIZE = 64  # how many independent sequences processed in paralell?
-BLOCK_SIZE = 256  # maximum context length for the transformer (max T)
-DROPOUT = 0.2  # propo of dropout
+# # global hyperparams
+# # TODO: add these to an args/hparam object using litCLI
+# VOCAB_SIZE = 65
+# N_EMBD = 384  # dimension of token embeddings
+# N_HEADS = 6  # number of self-attention heads
+# NUM_BLOCKS = 3  # number of transformer blocks
+# BATCH_SIZE = 64  # how many independent sequences processed in paralell?
+# BLOCK_SIZE = 256  # maximum context length for the transformer (max T)
+# DROPOUT = 0.2  # propo of dropout
+
+
+@dataclass
+class Config:
+    # Program args
+
+    # Model args
+    VOCAB_SIZE = 65
+    N_EMBD = 384  # dimension of token embeddings
+    N_HEADS = 6  # number of self-attention heads
+    NUM_BLOCKS = 3  # number of transformer blocks
+    BATCH_SIZE = 64  # how many independent sequences processed in paralell?
+    BLOCK_SIZE = 256  # maximum context length for the transformer (max T)
+    DROPOUT = 0.2  # propo of dropout
+
+    # Trainer args
 
 
 class Head(nn.Module):
     """One head of self-attention"""
 
-    def __init__(self, hparams):
-
+    def __init__(self, head_size, n_embd, dropout, block_size):
         super().__init__()
-        self.key = nn.Linear(self.hparams.N_EMBD, self.hparams.head_size, bias=False)
-        self.query = nn.Linear(self.hparams.N_EMBD, self.hparams.head_size, bias=False)
-        self.value = nn.Linear(self.hparams.N_EMBD, self.hparams.head_size, bias=False)
+        self.key = nn.Linear(n_embd, head_size, bias=False)
+        self.query = nn.Linear(n_embd, head_size, bias=False)
+        self.value = nn.Linear(n_embd, head_size, bias=False)
         self.register_buffer(
-            "tril",
-            torch.tril(torch.ones(self.hparams.BLOCK_SIZE, self.hparams.BLOCK_SIZE)),
+            "tril", torch.tril(torch.ones(block_size, block_size))
         )  # non-trainable param
-        self.dropout = nn.Dropout(self.hparams.DROPOUT)
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
         # keys, queries, values are simply different linear models on the same x
@@ -56,11 +72,13 @@ class Head(nn.Module):
 class MultiHeadAttention(nn.Module):
     """Multiple heads of self-attention in parallel"""
 
-    def __init__(self, hparams):
+    def __init__(self, num_heads, head_size, n_embd, dropout, block_size):
         super().__init__()
-        self.heads = nn.ModuleList([Head(hparams) for _ in range(self.hparams.N_HEADS)])
-        self.projection = nn.Linear(N_EMBD, N_EMBD)
-        self.dropout = nn.Dropout(DROPOUT)
+        self.heads = nn.ModuleList(
+            [Head(head_size, n_embd, dropout, block_size) for _ in range(num_heads)]
+        )
+        self.projection = nn.Linear(n_embd, n_embd)
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
         x = torch.cat([h(x) for h in self.heads], dim=-1)
@@ -71,15 +89,15 @@ class MultiHeadAttention(nn.Module):
 class FeedForward(nn.Module):
     """linear layer + non-linearity"""
 
-    def __init__(self, hparams):
+    def __init__(self, n_embd, dropout):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(self.hparams.N_EMBD, 4 * self.hparams.N_EMBD),
+            nn.Linear(n_embd, 4 * n_embd),
             nn.ReLU(),
             nn.Linear(
-                4 * self.hparams.N_EMBD, self.hparams.N_EMBD
+                4 * n_embd, n_embd
             ),  # projection layer? 'going back into the residual pathway'?
-            nn.Dropout(DROPOUT),
+            nn.Dropout(dropout),
         )
 
     def forward(self, x):
@@ -89,15 +107,15 @@ class FeedForward(nn.Module):
 class Block(nn.Module):
     """Transformer block: communication then computation"""
 
-    def __init__(self, hparams):
+    def __init__(self, n_embd, n_heads, dropout, block_size):
         super().__init__()
 
-        self.head_size = self.hparams.N_EMBD // self.hparams.N_HEADS
+        head_size = n_embd // n_heads
 
-        self.sa = MultiHeadAttention(self.hparams.N_HEADS, self.head_size)
-        self.ffwd = FeedForward(self.hparams.N_EMBD)
-        self.ln1 = nn.LayerNorm(self.hparams.N_EMBD)
-        self.ln2 = nn.LayerNorm(self.hparams.N_EMBD)
+        self.sa = MultiHeadAttention(n_heads, head_size, n_embd, dropout, block_size)
+        self.ffwd = FeedForward(n_embd, dropout)
+        self.ln1 = nn.LayerNorm(n_embd)
+        self.ln2 = nn.LayerNorm(n_embd)
 
     def forward(self, x):
         # layernorm added before transformations now (different to original paper)
@@ -110,7 +128,6 @@ class Block(nn.Module):
 class TransformerDecoder(nn.Module):
     def __init__(self, hparams):
         super().__init__()
-        # hparams needs: N_EMBD, BLOCK_SIZE, DROPOUT, head_size, VOCAB_SIZE, NUM_BLOCKS
         self.hparams = hparams
 
         self.token_embedding_table = nn.Embedding(
@@ -122,7 +139,12 @@ class TransformerDecoder(nn.Module):
 
         self.blocks = nn.Sequential(
             *[
-                Block(self.hparams.N_EMBD, self.hparams.N_HEADS)
+                Block(
+                    self.hparams.N_EMBD,
+                    self.hparams.N_HEADS,
+                    self.hparams.DROPOUT,
+                    self.hparams.BLOCK_SIZE,
+                )
                 for _ in range(self.hparams.NUM_BLOCKS)
             ]
         )
@@ -133,7 +155,7 @@ class TransformerDecoder(nn.Module):
         B, T = idx.shape
 
         token_embeddings = self.token_embedding_table(idx)
-        T_arange = torch.arange(T)  # prev device=DEVICE
+        T_arange = torch.arange(T)
         T_arange = T_arange.type_as(idx)
         position_embeddings = self.position_embedding_table(T_arange)
 
@@ -155,7 +177,7 @@ class TransformerDecoder(nn.Module):
 
     def generate(self, idx, max_new_tokens):
         for _ in range(max_new_tokens):
-            idx_cond = idx[:, -BLOCK_SIZE:]
+            idx_cond = idx[:, -self.hparams.BLOCK_SIZE :]
 
             logits, _ = self(idx_cond)  # logits are (B, T, C)
             logits = logits[:, -1, :]  # logits becomes (B, C)
@@ -170,10 +192,10 @@ class TransformerDecoder(nn.Module):
 
 
 class LitMinGPT(L.LightningModule):
-    def __init__(self, transformer_decoder):
+    def __init__(self, hparams):
         super().__init__()
-        # self.save_hyperparameters()  # don't need to specify for any nn.Module
-        self.decoder = transformer_decoder
+        self.save_hyperparameters()
+        self.decoder = TransformerDecoder(hparams)
 
     def training_step(self, batch, batch_idx):
         x, y = batch
