@@ -2,38 +2,11 @@
 #  - Torch implementation of Kaparthy's minGPT
 #  - Lightning wrapper for the model
 
-from dataclasses import dataclass
-
 import lightning as L
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
-
-# # global hyperparams
-# # TODO: add these to an args/hparam object using litCLI
-# VOCAB_SIZE = 65
-# N_EMBD = 384  # dimension of token embeddings
-# N_HEADS = 6  # number of self-attention heads
-# NUM_BLOCKS = 3  # number of transformer blocks
-# BATCH_SIZE = 64  # how many independent sequences processed in paralell?
-# BLOCK_SIZE = 256  # maximum context length for the transformer (max T)
-# DROPOUT = 0.2  # propo of dropout
-
-
-@dataclass
-class Config:
-    # Program args
-
-    # Model args
-    VOCAB_SIZE = 65
-    N_EMBD = 384  # dimension of token embeddings
-    N_HEADS = 6  # number of self-attention heads
-    NUM_BLOCKS = 3  # number of transformer blocks
-    BATCH_SIZE = 64  # how many independent sequences processed in paralell?
-    BLOCK_SIZE = 256  # maximum context length for the transformer (max T)
-    DROPOUT = 0.2  # propo of dropout
-
-    # Trainer args
+from torch.optim.lr_scheduler import CosineAnnealingLR
 
 
 class Head(nn.Module):
@@ -194,8 +167,8 @@ class TransformerDecoder(nn.Module):
 class LitMinGPT(L.LightningModule):
     def __init__(self, hparams):
         super().__init__()
-        self.save_hyperparameters()
-        self.decoder = TransformerDecoder(hparams)
+        self.save_hyperparameters(hparams)
+        self.decoder = TransformerDecoder(self.hparams)
 
     def training_step(self, batch, batch_idx):
         x, y = batch
@@ -210,5 +183,15 @@ class LitMinGPT(L.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimiser = torch.optim.AdamW(self.parameters(), lr=1e-3)
-        return optimiser
+
+        if self.hparams.optimiser_name == "adam":
+            optimizer = torch.optim.AdamW(self.parameters(), lr=self.hparams.lr)
+        else:
+            raise ValueError("Invalid optimiser")
+
+        if self.hparams.scheduler_name == "cosine":
+            scheduler = CosineAnnealingLR(optimizer, T_max=self.hparams.max_epochs)
+        else:  # if scheduler_name is None just return optimiser
+            return optimizer
+        # otherwise scheduler is set and return both
+        return [optimizer], [scheduler]
