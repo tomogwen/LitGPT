@@ -18,7 +18,7 @@ If developing, install pre-commit checks:
 pre-commit install
 ```
 
-## 🤖 Generating Text
+## 🤖 Generating Text
 
 Coming..
 
