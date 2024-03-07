@@ -1,41 +1,55 @@
 # Tests for src/litgpt/model.py
 
+from dataclasses import dataclass
+
 import pytest
 import torch
 
 from litgpt.model import LitMinGPT, TransformerDecoder
 
-# Constants based on your model's hyperparameters
-VOCAB_SIZE = 65
-BATCH_SIZE = 2  # Smaller size for testing
-BLOCK_SIZE = 256
+
+@dataclass
+class TestHparams:
+    vocab_size: int = 65
+    n_embd: int = 384
+    n_heads: int = 6
+    num_blocks: int = 3
+    batch_size: int = 2  # smaller size for testing
+    block_size: int = 256
+    dropout: float = 0.2
+    lr: float = 3e-4
 
 
 @pytest.fixture
 def sample_input():
-    return torch.randint(low=0, high=VOCAB_SIZE, size=(BATCH_SIZE, BLOCK_SIZE))
+    hparams = TestHparams()
+    return torch.randint(
+        low=0, high=hparams.vocab_size, size=(hparams.batch_size, hparams.block_size)
+    )
 
 
 @pytest.fixture
 def transformer_decoder():
-    return TransformerDecoder()
+    hparams = TestHparams()
+    return TransformerDecoder(hparams)
 
 
 @pytest.fixture
 def lit_mingpt(transformer_decoder):
-    return LitMinGPT(transformer_decoder=transformer_decoder)
+    return LitMinGPT()
 
 
 # Tests for TransformerDecoder
 def test_transformer_decoder_forward(transformer_decoder, sample_input):
     # Test the forward pass
+    hparams = TestHparams()
     logits, loss = transformer_decoder(sample_input)
     assert logits is not None, "Logits should not be None"
     assert logits.shape == (
-        BATCH_SIZE,
-        BLOCK_SIZE,
-        VOCAB_SIZE,
-    ), f"Logits should have shape {(BATCH_SIZE, BLOCK_SIZE, VOCAB_SIZE)}"
+        hparams.batch_size,
+        hparams.block_size,
+        hparams.vocab_size,
+    ), f"Logits should have shape {(hparams.batch_size, hparams.block_size, hparams.vocab_size)}"
 
 
 # Tests for LitMinGPT

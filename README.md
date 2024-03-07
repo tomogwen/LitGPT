@@ -5,41 +5,37 @@ This repo contains my efforts to learn how to create a (better than research cod
 
 **MWE:** The code here grew out of a minimal example of multi-node, multi-GPU training with PyTorch Lightning on a slurm cluster - if you're interested in that, please see the [slurmformer branch](https://github.com/tomogwen/LitGPT/tree/slurmformer).
 
-## Goal
-
-A non-exhaustive list of skills I'd like to learn or practice with this repo are below.
-
-Machine learning engineering:
-- [ ] Dealing with hyperparams nicely
-    - Config files + CLI
-    - Use an args objects or pass around many hparams?
-- [ ] Dealing with different accelerators nicely
-    - should run easily on CPU, MPS, or (multi-)GPU.
-
-Software development:
-- [ ] Doc strings and type hints
-- [X] Setting up github actions.
-- [X] Writing tests.
-- [X] Setting up pre-commit checks.
-- [X] 'Packagify'-ing code.
-- [X] Having good repo structure.
-
-## Installation
+## 🔧 Installation
 
 To install dependencies and activate the conda environment:
 ```
-> conda env create -f env.yml
-> conda activate litgpt
+conda env create -f env.yml
+conda activate litgpt
 ```
 
 If developing, install pre-commit checks:
 ```
-> pre-commit install
+pre-commit install
 ```
 
-## Usage
+## 📈 Training
 
-To train the model locally (whilst in the conda environment):
+To train the model (whilst in the conda environment):
 ```
-> train
+litgpt fit --config configs/default.yaml
 ```
+
+You can override and extend the config file using the CLI. Arguments like `--optimizer` and `--lr_scheduler` accept Torch classes. For example:
+```
+litgpt fit --config configs/default.yaml --optimizer Adam
+```
+
+This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightning_cli_intermediate.html#). All options can be seen by running `litgpt fit --help`.
+
+### 🚀 HPC
+
+A script for [DDP training](https://pytorch.org/tutorials/beginner/ddp_series_theory.html) on Slurm-managed HPC is provided. Update the [shell script](scripts/slurm.sh) where required, make it executable (with `chmod +x scripts/slurm.sh`), and run it:
+```
+scripts/slurm.sh
+```
+This script will generate and submit a slurm job using `sbatch`. Generating the script dynamically allows resource requests to be set once at the top of the file, then passed to both slurm (to allocate resources) and Lightning (to utilise them).

@@ -7,28 +7,19 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-# global hyperparams
-VOCAB_SIZE = 65
-N_EMBD = 384  # dimension of token embeddings
-N_HEADS = 6  # number of self-attention heads
-NUM_BLOCKS = 3  # number of transformer blocks
-BATCH_SIZE = 64  # how many independent sequences processed in paralell?
-BLOCK_SIZE = 256  # maximum context length for the transformer (max T)
-DROPOUT = 0.2  # propo of dropout
-
 
 class Head(nn.Module):
     """One head of self-attention"""
 
-    def __init__(self, head_size):
+    def __init__(self, head_size, n_embd, dropout, block_size):
         super().__init__()
-        self.key = nn.Linear(N_EMBD, head_size, bias=False)
-        self.query = nn.Linear(N_EMBD, head_size, bias=False)
-        self.value = nn.Linear(N_EMBD, head_size, bias=False)
+        self.key = nn.Linear(n_embd, head_size, bias=False)
+        self.query = nn.Linear(n_embd, head_size, bias=False)
+        self.value = nn.Linear(n_embd, head_size, bias=False)
         self.register_buffer(
-            "tril", torch.tril(torch.ones(BLOCK_SIZE, BLOCK_SIZE))
+            "tril", torch.tril(torch.ones(block_size, block_size))
         )  # non-trainable param
-        self.dropout = nn.Dropout(DROPOUT)
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
         # keys, queries, values are simply different linear models on the same x
@@ -53,11 +44,13 @@ class Head(nn.Module):
 class MultiHeadAttention(nn.Module):
     """Multiple heads of self-attention in parallel"""
 
-    def __init__(self, num_heads, head_size):
+    def __init__(self, num_heads, head_size, n_embd, dropout, block_size):
         super().__init__()
-        self.heads = nn.ModuleList([Head(head_size) for _ in range(num_heads)])
-        self.projection = nn.Linear(N_EMBD, N_EMBD)
-        self.dropout = nn.Dropout(DROPOUT)
+        self.heads = nn.ModuleList(
+            [Head(head_size, n_embd, dropout, block_size) for _ in range(num_heads)]
+        )
+        self.projection = nn.Linear(n_embd, n_embd)
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
         x = torch.cat([h(x) for h in self.heads], dim=-1)
@@ -68,7 +61,7 @@ class MultiHeadAttention(nn.Module):
 class FeedForward(nn.Module):
     """linear layer + non-linearity"""
 
-    def __init__(self, n_embd):
+    def __init__(self, n_embd, dropout):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(n_embd, 4 * n_embd),
@@ -76,7 +69,7 @@ class FeedForward(nn.Module):
             nn.Linear(
                 4 * n_embd, n_embd
             ),  # projection layer? 'going back into the residual pathway'?
-            nn.Dropout(DROPOUT),
+            nn.Dropout(dropout),
         )
 
     def forward(self, x):
@@ -86,11 +79,13 @@ class FeedForward(nn.Module):
 class Block(nn.Module):
     """Transformer block: communication then computation"""
 
-    def __init__(self, n_embd, n_heads):
+    def __init__(self, n_embd, n_heads, dropout, block_size):
         super().__init__()
+
         head_size = n_embd // n_heads
-        self.sa = MultiHeadAttention(n_heads, head_size)
-        self.ffwd = FeedForward(n_embd)
+
+        self.sa = MultiHeadAttention(n_heads, head_size, n_embd, dropout, block_size)
+        self.ffwd = FeedForward(n_embd, dropout)
         self.ln1 = nn.LayerNorm(n_embd)
         self.ln2 = nn.LayerNorm(n_embd)
 
@@ -103,23 +98,36 @@ class Block(nn.Module):
 
 
 class TransformerDecoder(nn.Module):
-    def __init__(self):
+    def __init__(self, hparams):
         super().__init__()
+        self.hparams = hparams
 
-        self.token_embedding_table = nn.Embedding(VOCAB_SIZE, N_EMBD)
-        self.position_embedding_table = nn.Embedding(BLOCK_SIZE, N_EMBD)
+        self.token_embedding_table = nn.Embedding(
+            self.hparams.vocab_size, self.hparams.n_embd
+        )
+        self.position_embedding_table = nn.Embedding(
+            self.hparams.block_size, self.hparams.n_embd
+        )
 
         self.blocks = nn.Sequential(
-            *[Block(N_EMBD, N_HEADS) for _ in range(NUM_BLOCKS)]
+            *[
+                Block(
+                    self.hparams.n_embd,
+                    self.hparams.n_heads,
+                    self.hparams.dropout,
+                    self.hparams.block_size,
+                )
+                for _ in range(self.hparams.num_blocks)
+            ]
         )
-        self.ln_f = nn.LayerNorm(N_EMBD)
-        self.lm_head = nn.Linear(N_EMBD, VOCAB_SIZE)
+        self.ln_f = nn.LayerNorm(self.hparams.n_embd)
+        self.lm_head = nn.Linear(self.hparams.n_embd, self.hparams.vocab_size)
 
     def forward(self, idx, targets=None):
         B, T = idx.shape
 
         token_embeddings = self.token_embedding_table(idx)
-        T_arange = torch.arange(T)  # prev device=DEVICE
+        T_arange = torch.arange(T)
         T_arange = T_arange.type_as(idx)
         position_embeddings = self.position_embedding_table(T_arange)
 
@@ -141,7 +149,7 @@ class TransformerDecoder(nn.Module):
 
     def generate(self, idx, max_new_tokens):
         for _ in range(max_new_tokens):
-            idx_cond = idx[:, -BLOCK_SIZE:]
+            idx_cond = idx[:, -self.hparams.block_size :]
 
             logits, _ = self(idx_cond)  # logits are (B, T, C)
             logits = logits[:, -1, :]  # logits becomes (B, C)
@@ -156,10 +164,20 @@ class TransformerDecoder(nn.Module):
 
 
 class LitMinGPT(L.LightningModule):
-    def __init__(self, transformer_decoder):
+    def __init__(
+        self,
+        vocab_size: int = 65,
+        n_embd: int = 384,  # dimension of token embeddings
+        n_heads: int = 6,  # number of self-attention heads
+        num_blocks: int = 3,  # number of transformer blocks
+        batch_size: int = 64,  # how many independent sequences processed in paralell?
+        block_size: int = 256,  # maximum context length for the transformer (max T)
+        dropout: float = 0.2,  # propo of dropout
+        lr: float = 3e-4,
+    ):
         super().__init__()
-        # self.save_hyperparameters()  # don't need to specify for any nn.Module
-        self.decoder = transformer_decoder
+        self.save_hyperparameters()
+        self.decoder = TransformerDecoder(self.hparams)
 
     def training_step(self, batch, batch_idx):
         x, y = batch
@@ -174,5 +192,5 @@ class LitMinGPT(L.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimiser = torch.optim.AdamW(self.parameters(), lr=1e-3)
-        return optimiser
+        optimizer = torch.optim.AdamW(self.parameters(), lr=self.hparams.lr)
+        return optimizer
