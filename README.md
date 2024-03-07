@@ -3,7 +3,7 @@
 
 This repo contains my efforts to learn how to create a (better than research code, aspiring to production quality) deep learning repository. It trains an implementation of Kaparthy's [minGPT](https://github.com/karpathy/minGPT) in PyTorch Lightning.
 
-**MWE:** The code here grew from a minimal example of distributed training on a slurm cluster. If you're interested in that, please see the [slurmformer branch](https://github.com/tomogwen/LitGPT/tree/slurmformer).
+**MWE:** The code here grew from a minimal example of distributed training on a Slurm cluster. If you're interested in that, please see the [slurmformer branch](https://github.com/tomogwen/LitGPT/tree/slurmformer).
 
 ## 🔧 Installation
 
