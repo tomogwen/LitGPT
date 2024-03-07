@@ -61,7 +61,7 @@ if [ ! -d "$CONDA_ENV_PATH" ]; then
 fi
 
 # Activate env
-conda activate ${CONDA_ENVS_DIR}
+conda activate $CONDA_ENVS_PATH
 
 # run train script
 srun litgpt fit --config configs/slurm.yaml --trainer.devices $NODES --trainer.devices $GPUS_PER_NODE --data.train_dataloader_workers $CPUS_PER_NODE --data.val_dataloader_workers $CPUS_PER_NODE
