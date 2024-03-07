@@ -38,7 +38,7 @@ This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightn
 
 ### 🚀 HPC (Slurm)
 
-A shell script for Slurm HPC's is available. Set the required variables in the [shell script](scripts/slurm.sh), and run:
+A script for Slurm HPC's is available. Set the required variables in the [shell script](scripts/slurm.sh), and run:
 
 ```
 sbatch scripts/slurm.sh
