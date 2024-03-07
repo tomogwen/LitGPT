@@ -34,8 +34,8 @@ This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightn
 
 ### 🚀 HPC
 
-A script for [DDP training](https://pytorch.org/tutorials/beginner/ddp_series_theory.html) on Slurm-managed HPC is provided. Update the [shell script](scripts/slurm.sh) and run:
-
+A script for [DDP training](https://pytorch.org/tutorials/beginner/ddp_series_theory.html) on Slurm-managed HPC is provided. Update the [shell script](scripts/slurm.sh) where required, make it executable, and run it:
 ```
-sbatch scripts/slurm.sh
+scripts/slurm.sh
 ```
+This script will generates and submit a slurm submission using `sbatch`. Generating the script dynamically allows resource requests to be set once at the top of the file, then passed to both slurm (to allocate resources) and Lightning (to utilise them).
