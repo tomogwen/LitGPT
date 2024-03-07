@@ -31,7 +31,7 @@ sed \
   -e "s|\$seconds|$seconds|" \
   -e "s|\$NODES|$NODES|" \
   -e "s|\$GPUS_PER_NODE|$GPUS_PER_NODE|" \
-  -e "s|\$CPUS_PER_NODE|$CPUS_PER_NODE|" \
+  -e "s|\$CPUS_PER_NODE|$CPUS_PER_NODE|g" \
   -e "s|\$CONDA_ENVS_DIR|$CONDA_ENVS_DIR|" \
   -e "s|\$CONDA_ENV_PATH|$CONDA_ENV_PATH|" \
   -e "s|\$CONDA_PACKAGES_DIR|$CONDA_PACKAGES_DIR|" << 'EOF' | sbatch
