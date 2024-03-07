@@ -1,4 +1,6 @@
-# Training minGPT with Lightningloss
+# LitGPT
+# Minimal GPT Implementation in PyTorch Lightning
+# https://github.com/tomogwen/litgpt
 
 import torch
 from lightning.pytorch.cli import LightningCLI

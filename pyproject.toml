@@ -9,7 +9,7 @@ description = "Minimal GPT Implementation in PyTorch Lightning"
 readme = "README.md"
 
 [project.scripts]
-litgpt = "litgpt.train:main"
+litgpt = "litgpt.main:main"
 
 [project.urls]
 Source = "https://github.com/tomogwen/litgpt"
