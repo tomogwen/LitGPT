@@ -2,10 +2,10 @@
 ############################
 # --  Set the following! --
 ############################
-# --   Account Details   --
+# ---- Account Details ----
 QOS = your_slurm_qos 
 ACCOUNT = your_slurm_account
-# --   Time Requested    -- 
+# ---- Time Requested  ---- 
 hours = 1
 mins = 0
 seconds = 0
@@ -13,7 +13,7 @@ seconds = 0
 NODES = 2
 GPUS_PER_NODE = 2
 CPUS_PER_GPU = 36
-# --    Conda Setup      --
+# ------ Conda Setup ------
 CONDA_ENVS_DIR = /path/to/envs/
 CONDA_ENV_PATH = $CONDA_ENVS_DIR+="litgpt"
 CONDA_PACKAGES_DIR = /path/to/packages/
