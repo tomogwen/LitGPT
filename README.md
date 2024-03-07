@@ -34,7 +34,7 @@ This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightn
 
 ### 🚀 HPC
 
-A script for [DDP training](https://pytorch.org/tutorials/beginner/ddp_series_theory.html) on Slurm-managed HPC is provided. Update the [shell script](scripts/slurm.sh) where required, make it executable, and run it:
+A script for [DDP training](https://pytorch.org/tutorials/beginner/ddp_series_theory.html) on Slurm-managed HPC is provided. Update the [shell script](scripts/slurm.sh) where required, make it executable (with `chmod +x scripts/slurm.sh`), and run it:
 ```
 scripts/slurm.sh
 ```
