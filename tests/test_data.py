@@ -36,7 +36,7 @@ def sample_data_module():
     data_module = TinyShakespeareDataModule(
         dataset_path=dummy_dataset_path,
         batch_size=4,
-        BLOCK_SIZE=20,
+        block_size=20,
         train_test_split=0.8,
     )
     return data_module
