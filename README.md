@@ -38,4 +38,4 @@ A script for [DDP training](https://pytorch.org/tutorials/beginner/ddp_series_th
 ```
 scripts/slurm.sh
 ```
-This script will generates and submit a slurm submission using `sbatch`. Generating the script dynamically allows resource requests to be set once at the top of the file, then passed to both slurm (to allocate resources) and Lightning (to utilise them).
+This script will generate and submit a slurm submission using `sbatch`. Generating the script dynamically allows resource requests to be set once at the top of the file, then passed to both slurm (to allocate resources) and Lightning (to utilise them).
