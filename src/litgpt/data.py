@@ -32,11 +32,11 @@ class TinyShakespeareDataModule(L.LightningDataModule):
     def __init__(
         self,
         dataset_path: str = "data/tinyshakespeare.txt",
-        batch_size: int = 32,
+        batch_size: int = 64,
         train_test_split: float = 0.95,
         train_dataloader_workers: int = 10,
         val_dataloader_workers: int = 10,
-        BLOCK_SIZE: int = 256,
+        block_size: int = 256,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -66,10 +66,10 @@ class TinyShakespeareDataModule(L.LightningDataModule):
 
         n = int(self.hparams.train_test_split * len(data))
         self.train_data = TinyShakespeareDataSet(
-            data[:n], block_size=self.hparams.BLOCK_SIZE
+            data[:n], block_size=self.hparams.block_size
         )
         self.val_data = TinyShakespeareDataSet(
-            data[n:], block_size=self.hparams.BLOCK_SIZE
+            data[n:], block_size=self.hparams.block_size
         )
 
     def train_dataloader(self):

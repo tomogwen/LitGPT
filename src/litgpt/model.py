@@ -103,25 +103,25 @@ class TransformerDecoder(nn.Module):
         self.hparams = hparams
 
         self.token_embedding_table = nn.Embedding(
-            self.hparams.VOCAB_SIZE, self.hparams.N_EMBD
+            self.hparams.vocab_size, self.hparams.n_embd
         )
         self.position_embedding_table = nn.Embedding(
-            self.hparams.BLOCK_SIZE, self.hparams.N_EMBD
+            self.hparams.block_size, self.hparams.n_embd
         )
 
         self.blocks = nn.Sequential(
             *[
                 Block(
-                    self.hparams.N_EMBD,
-                    self.hparams.N_HEADS,
-                    self.hparams.DROPOUT,
-                    self.hparams.BLOCK_SIZE,
+                    self.hparams.n_embd,
+                    self.hparams.n_heads,
+                    self.hparams.dropout,
+                    self.hparams.block_size,
                 )
-                for _ in range(self.hparams.NUM_BLOCKS)
+                for _ in range(self.hparams.num_blocks)
             ]
         )
-        self.ln_f = nn.LayerNorm(self.hparams.N_EMBD)
-        self.lm_head = nn.Linear(self.hparams.N_EMBD, self.hparams.VOCAB_SIZE)
+        self.ln_f = nn.LayerNorm(self.hparams.n_embd)
+        self.lm_head = nn.Linear(self.hparams.n_embd, self.hparams.vocab_size)
 
     def forward(self, idx, targets=None):
         B, T = idx.shape
@@ -149,7 +149,7 @@ class TransformerDecoder(nn.Module):
 
     def generate(self, idx, max_new_tokens):
         for _ in range(max_new_tokens):
-            idx_cond = idx[:, -self.hparams.BLOCK_SIZE :]
+            idx_cond = idx[:, -self.hparams.block_size :]
 
             logits, _ = self(idx_cond)  # logits are (B, T, C)
             logits = logits[:, -1, :]  # logits becomes (B, C)
@@ -166,13 +166,13 @@ class TransformerDecoder(nn.Module):
 class LitMinGPT(L.LightningModule):
     def __init__(
         self,
-        VOCAB_SIZE: int = 65,
-        N_EMBD: int = 384,  # dimension of token embeddings
-        N_HEADS: int = 6,  # number of self-attention heads
-        NUM_BLOCKS: int = 3,  # number of transformer blocks
-        BATCH_SIZE: int = 64,  # how many independent sequences processed in paralell?
-        BLOCK_SIZE: int = 256,  # maximum context length for the transformer (max T)
-        DROPOUT: float = 0.2,  # propo of dropout
+        vocab_size: int = 65,
+        n_embd: int = 384,  # dimension of token embeddings
+        n_heads: int = 6,  # number of self-attention heads
+        num_blocks: int = 3,  # number of transformer blocks
+        batch_size: int = 64,  # how many independent sequences processed in paralell?
+        block_size: int = 256,  # maximum context length for the transformer (max T)
+        dropout: float = 0.2,  # propo of dropout
         lr: float = 3e-4,
     ):
         super().__init__()
