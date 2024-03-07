@@ -1,6 +1,6 @@
 # lightning.pytorch==2.2.0.post0
 trainer:
-  max_epochs: 100
+  max_epochs: 10
   accelerator: gpu
   num_nodes: 2
   devices: 2  # devices per node
