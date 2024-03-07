@@ -5,7 +5,7 @@
 # ---- Account Details ----
 QOS=your_qos
 ACCOUNT=your_account
-# ---- Time Requested  ---- 
+# ---- Time Requested  ----
 hours=1
 mins=0
 seconds=0
