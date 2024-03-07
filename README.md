@@ -34,7 +34,7 @@ You can override and extend the config file using the CLI. Arguments like `--opt
 litgpt fit --config configs/default.yaml --optimizer Adam
 ```
 
-This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightning_cli_intermediate.html#). Full options can be seen by running `litgpt fit --help`.
+This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightning_cli_intermediate.html#). All options can be seen by running `litgpt fit --help`.
 
 ## 🚀 Training (Slurm)
 
