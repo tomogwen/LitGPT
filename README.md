@@ -32,7 +32,7 @@ litgpt fit --config configs/default.yaml --optimizer Adam
 
 This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightning_cli_intermediate.html#). All options can be seen by running `litgpt fit --help`.
 
-### 🚀 HPC (Slurm)
+### 🚀 HPC
 
 A script for Slurm HPC is available. Set the required variables in the [shell script](scripts/slurm.sh), and run:
 
