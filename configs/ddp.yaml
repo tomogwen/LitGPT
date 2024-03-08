@@ -5,6 +5,12 @@ trainer:
   num_nodes: 2
   devices: 2  # devices per node
   strategy: ddp
+  logger:
+    class_path: WandbLogger
+    init_args:
+      log_model: all
+      project: LitGPT
+      save_dir: checkpoints/
 model:
   vocab_size: 65
   n_embd: 384

@@ -11,7 +11,7 @@ from litgpt.model import LitMinGPT
 
 def main():
     torch.set_float32_matmul_precision("high")
-    LightningCLI(LitMinGPT, TinyShakespeareDataModule)
+    LightningCLI(LitMinGPT, TinyShakespeareDataModule, save_config_callback=None)
 
 
 if __name__ == "__main__":

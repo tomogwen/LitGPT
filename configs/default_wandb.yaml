@@ -2,8 +2,10 @@
 trainer:
   max_epochs: 10
   logger:
-    class_path: TensorBoardLogger
+    class_path: WandbLogger
     init_args:
+      log_model: all
+      project: LitGPT
       save_dir: checkpoints/
 model:
   vocab_size: 65
