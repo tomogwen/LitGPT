@@ -25,12 +25,9 @@ To train the model (whilst in the conda environment):
 litgpt fit --config configs/default.yaml
 ```
 
-You can override and extend the config file using the CLI. Arguments like `--optimizer` and `--lr_scheduler` accept Torch classes. For example:
-```
-litgpt fit --config configs/default.yaml --optimizer Adam
-```
+You can override and extend the config file using the CLI. Arguments like `--optimizer` and `--lr_scheduler` accept Torch classes. Run `litgpt fit --help` or read the [LightningCLI docs]((https://lightning.ai/docs/pytorch/stable/cli/lightning_cli.html)) for all options.
 
-This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightning_cli_intermediate.html#). All options can be seen by running `litgpt fit --help`.
+
 
 ### 👀 Logging
 
