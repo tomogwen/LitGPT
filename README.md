@@ -40,12 +40,10 @@ We provide config files for [Tensorboard](https://www.tensorflow.org/tensorboard
 tensorboard --log-dir=checkpoints/
 ```
 
-To monitor using Wandb, first login to your wandb account by running:
+Using the `default_wandb.yaml` or `ddp.yaml` config files will log to Wandb. First login to your wandb account with:
 ```
 wanbd login
 ```
-Using the `default_wandb.yaml` or `ddp.yaml` config files will log to Wandb.
-
 
 ### 🚀 HPC
 
