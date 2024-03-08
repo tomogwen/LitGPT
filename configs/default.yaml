@@ -5,6 +5,7 @@ trainer:
     class_path: TensorBoardLogger
     init_args:
       save_dir: checkpoints/
+      name: tensorboard
 model:
   vocab_size: 65
   n_embd: 384
