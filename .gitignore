@@ -2,6 +2,8 @@ __pycache__/
 wandb/
 lightning_logs/
 .ruff_cache/
+checkpoints/*
+!checkpoints/.gitkeep
 .DS_Store
 tokenised.pt
 slurm*
