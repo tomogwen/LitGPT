@@ -32,7 +32,7 @@ litgpt fit --config configs/default.yaml --optimizer Adam
 
 This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightning_cli_intermediate.html#). All options can be seen by running `litgpt fit --help`.
 
-## 👀 Monitoring
+### 👀 Monitoring
 
 We provide config files for [Tensorboard](https://www.tensorflow.org/tensorboard) and [Wandb](https://wandb.ai/) monitoring. Training with the default config (as above) uses Tensorboard. You can monitor training by running:
 
