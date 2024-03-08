@@ -32,6 +32,21 @@ litgpt fit --config configs/default.yaml --optimizer Adam
 
 This uses the [LightningCLI](https://lightning.ai/docs/pytorch/stable/cli/lightning_cli_intermediate.html#). All options can be seen by running `litgpt fit --help`.
 
+## 👀 Monitoring
+
+We provide config files for [Tensorboard](https://www.tensorflow.org/tensorboard) and [Wandb](https://wandb.ai/) monitoring. Training with the default config (as above) uses Tensorboard. You can monitor training by running:
+
+```
+tensorboard --log-dir=checkpoints/
+```
+
+To monitor using Wandb, first login to your wandb account by running:
+```
+wanbd login
+```
+Using the `default_wandb.yaml` or `ddp.yaml` config files will log to Wandb.
+
+
 ### 🚀 HPC
 
 A script for [DDP training](https://pytorch.org/tutorials/beginner/ddp_series_theory.html) on Slurm-managed HPC is provided. Update the [shell script](scripts/slurm.sh) where required, make it executable (with `chmod +x scripts/slurm.sh`), and run it:
