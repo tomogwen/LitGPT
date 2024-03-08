@@ -5,11 +5,6 @@ trainer:
   num_nodes: 2
   devices: 2  # devices per node
   strategy: ddp
-  logger:
-    class_path: pytorch_lightning.loggers.WandbLogger
-    init_args:
-      log_model: all
-      project: litgpt
 model:
   vocab_size: 65
   n_embd: 384
