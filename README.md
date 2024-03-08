@@ -37,10 +37,7 @@ We provide config files for [Tensorboard](https://www.tensorflow.org/tensorboard
 tensorboard --log-dir=checkpoints/
 ```
 
-Using the `default_wandb.yaml` or `ddp.yaml` config files will log to Wandb. First login to your wandb account with:
-```
-wanbd login
-```
+Using the `default_wandb.yaml` or `ddp.yaml` config files will log to Wandb. This requires logging into your Wandb account with `wandb login`.
 
 ### 🚀 HPC
 
