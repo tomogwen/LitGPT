@@ -51,11 +51,13 @@ class TinyShakespeareDataModule(L.LightningDataModule):
             text = f.read()
             chars = sorted(list(set(text)))
 
+            # tokeniser
             stoi = {ch: i for i, ch in enumerate(chars)}  # string to int
 
             def encode(s):
                 return [stoi[c] for c in s]  # encoder: maps strings to list of ints
 
+            # tokenise data
             data = torch.tensor(encode(text), dtype=torch.long)
             torch.save(data, self.hparams.tokenised_path)
 

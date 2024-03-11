@@ -179,15 +179,18 @@ class LitMinGPT(L.LightningModule):
         self.save_hyperparameters()
         self.decoder = TransformerDecoder(self.hparams)
 
+    def forward(self, inputs, target):
+        return self.decoder(inputs, target)
+
     def training_step(self, batch, batch_idx):
         x, y = batch
-        logits, loss = self.decoder(x, y)
+        logits, loss = self(x, y)
         self.log("train_loss", loss, sync_dist=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
-        logits, loss = self.decoder(x, y)
+        logits, loss = self(x, y)
         self.log("val_loss", loss, sync_dist=True)
         return loss
 
