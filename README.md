@@ -1,9 +1,7 @@
 [![Pre-commit](https://github.com/tomogwen/LitGPT/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/tomogwen/LitGPT/actions/workflows/pre-commit.yml)&nbsp;&nbsp;[![Tests](https://github.com/tomogwen/LitGPT/actions/workflows/tests.yml/badge.svg)](https://github.com/tomogwen/LitGPT/actions/workflows/tests.yml)
 # ⚡️ Lightning Minimal GPT
 
-This repo contains my efforts to learn how to create a (better than research code, aspiring to production quality) deep learning repository. It trains an implementation of Kaparthy's [minGPT](https://github.com/karpathy/minGPT) in PyTorch Lightning.
-
-**MWE:** The code here grew from a minimal example of distributed training on a Slurm cluster. If you're interested in that, please see the [slurmformer branch](https://github.com/tomogwen/LitGPT/tree/slurmformer).
+This repo trains a PyTorch implementation of Kaparthy's [minGPT](https://github.com/karpathy/minGPT) using PyTorch Lightning. It began as a way for me to learn more about transformers, and grew into a way for me to practice writing more 'production ready' deep learning code.
 
 ## 🔧 Installation
 
@@ -31,13 +29,13 @@ You can override and extend the config file using the CLI. Arguments like `--opt
 
 ### 👀 Logging
 
-We provide config files for [Tensorboard](https://www.tensorflow.org/tensorboard) and [Wandb](https://wandb.ai/) monitoring. Training with the default config (as above) uses Tensorboard. You can monitor training by running:
+We provide config files for [Tensorboard](https://www.tensorflow.org/tensorboard) and [Weights & Biases](https://wandb.ai/) monitoring. Training with the default config (as above) uses Tensorboard. You can monitor training by running:
 
 ```
 tensorboard --log-dir=checkpoints/
 ```
 
-Using the `default_wandb.yaml` or `ddp.yaml` config files will log to Wandb. This requires logging into your Wandb account with `wandb login`.
+To log with Weights & Biases use the `default_wandb.yaml` or `ddp.yaml` config files. You will need to authenticate for the first time using `wandb login`.
 
 ### 🚀 HPC
 
@@ -46,3 +44,8 @@ A script for [DDP training](https://pytorch.org/tutorials/beginner/ddp_series_th
 scripts/slurm.sh
 ```
 This script will generate and submit a slurm job using `sbatch`. Generating the script dynamically allows resource requests to be set once at the top of the file, then passed to both slurm (to allocate resources) and Lightning (to utilise them).
+
+
+## 🤖 Text Generation
+
+Lightning is convenient for training models and offers powerful tools for distributed inference, but isn't built for individual generations. We will use pure PyTorch to generate text using the model checkpoints we trained with Lightning.
