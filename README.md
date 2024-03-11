@@ -1,7 +1,7 @@
 [![Pre-commit](https://github.com/tomogwen/LitGPT/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/tomogwen/LitGPT/actions/workflows/pre-commit.yml)&nbsp;&nbsp;[![Tests](https://github.com/tomogwen/LitGPT/actions/workflows/tests.yml/badge.svg)](https://github.com/tomogwen/LitGPT/actions/workflows/tests.yml)
 # ⚡️ Lightning Minimal GPT
 
-This repo trains a PyTorch implementation of [minGPT](https://github.com/karpathy/minGPT) using PyTorch Lightning. MinGPT is a minimal version of a [GPT language model](https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf) as taught in Kaparthy's [zero-to-hero course](https://www.youtube.com/watch?v=kCc8FmEb1nY&ab_channel=AndrejKarpathy). This codebase is essentially a 'playground' repository
+This repo trains a PyTorch implementation of [minGPT](https://github.com/karpathy/minGPT) using PyTorch Lightning. MinGPT is a minimal version of a [GPT language model](https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf) as taught in Kaparthy's [zero-to-hero course](https://www.youtube.com/watch?v=kCc8FmEb1nY&ab_channel=AndrejKarpathy). This codebase is a 'playground' repository where I can practice writing (hopefully!) better deep learning code.
 
 ## 🔧 Installation
 
