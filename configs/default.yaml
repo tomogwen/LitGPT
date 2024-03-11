@@ -1,6 +1,11 @@
 # lightning.pytorch==2.2.0.post0
 trainer:
   max_epochs: 10
+  logger:
+    class_path: TensorBoardLogger
+    init_args:
+      save_dir: checkpoints/
+      name: tensorboard
 model:
   vocab_size: 65
   n_embd: 384
