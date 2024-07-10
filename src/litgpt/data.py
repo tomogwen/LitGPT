@@ -93,7 +93,7 @@ class TinyShakespeareDataModule(L.LightningDataModule):
 
     def train_dataloader(self):
         """Returns a dataloader for the training dataset."""
-        # lightning should auto-add DistributedSampler for these dataloaders when required
+        # lightning auto-adds DistributedSampler for these dataloaders when required
         return DataLoader(
             self.train_data,
             batch_size=self.hparams.batch_size,
