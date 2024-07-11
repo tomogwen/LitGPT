@@ -166,7 +166,7 @@ class TransformerDecoder(nn.Module):
             self.hparams.block_size, self.hparams.n_embd
         )
 
-        self.blocks = nn.Sequential(
+        self.blocks: nn.Sequential = nn.Sequential(
             *[
                 Block(
                     self.hparams.n_embd,
