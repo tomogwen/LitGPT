@@ -2,6 +2,7 @@ import os
 
 import lightning as L
 import torch
+from torch import Tensor
 from torch.utils.data import DataLoader, Dataset
 
 
@@ -10,28 +11,28 @@ class TinyShakespeareDataSet(Dataset):
     Torch Dataset for the Tiny Shakespeare dataset.
     """
 
-    def __init__(self, raw_text: torch.tensor, block_size: int = 256):
+    def __init__(self, raw_text: Tensor, block_size: int = 256):
         """
         Args:
             raw_text: Tensor of tokens, processed in TinyShakespeareDataModule.
             block_size: number of tokens in each training sample.
         """
         super().__init__()
-        self.raw_text: torch.tensor = raw_text
-        self.xs: torch.tensor = torch.stack(
+        self.raw_text: Tensor = raw_text
+        self.xs: Tensor = torch.stack(
             [raw_text[i : i + block_size] for i in range(len(raw_text) - block_size)]
         )
-        self.ys: torch.tensor = torch.stack(
+        self.ys: Tensor = torch.stack(
             [
                 raw_text[i + 1 : i + block_size + 1]
                 for i in range(len(raw_text) - block_size)
             ]
         )
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.xs)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index) -> int:
         return self.xs[index], self.ys[index]
 
 
@@ -72,7 +73,7 @@ class TinyShakespeareDataModule(L.LightningDataModule):
             # tokeniser
             stoi: dict = {ch: i for i, ch in enumerate(chars)}  # string to int
 
-            def encode(s):
+            def encode(s: str) -> list[int]:
                 return [stoi[c] for c in s]  # encoder: maps strings to list of ints
 
             # tokenise data
@@ -80,7 +81,7 @@ class TinyShakespeareDataModule(L.LightningDataModule):
             torch.save(data, self.hparams.tokenised_path)
 
     def setup(self, stage):
-        """Loads tensor of Tokens and splits into train/val datasets. Runs on each GPU if using DDP."""
+        """Loads Tensor of Tokens and splits into train/val datasets. Runs on each GPU if using DDP."""
         data: torch.tensor = torch.load(self.hparams.tokenised_path)
 
         n: int = int(self.hparams.train_test_split * len(data))
@@ -91,7 +92,7 @@ class TinyShakespeareDataModule(L.LightningDataModule):
             data[n:], block_size=self.hparams.block_size
         )
 
-    def train_dataloader(self):
+    def train_dataloader(self) -> DataLoader:
         """Returns a dataloader for the training dataset."""
         # lightning auto-adds DistributedSampler for these dataloaders when required
         return DataLoader(
@@ -101,7 +102,7 @@ class TinyShakespeareDataModule(L.LightningDataModule):
             persistent_workers=True,
         )
 
-    def val_dataloader(self):
+    def val_dataloader(self) -> DataLoader:
         """Returns a dataloader for the validation dataset."""
         return DataLoader(
             self.val_data,
