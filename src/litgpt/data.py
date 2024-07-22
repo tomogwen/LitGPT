@@ -1,5 +1,4 @@
 import os
-from typing import Tuple
 
 import lightning as L
 import torch
@@ -33,7 +32,7 @@ class TinyShakespeareDataSet(Dataset):
     def __len__(self) -> int:
         return len(self.xs)
 
-    def __getitem__(self, index) -> Tuple[Tensor, Tensor]:
+    def __getitem__(self, index) -> tuple[Tensor, Tensor]:
         return self.xs[index], self.ys[index]
 
 

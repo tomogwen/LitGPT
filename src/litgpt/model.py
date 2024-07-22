@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional
 
 import lightning as L
 import torch
@@ -175,7 +175,7 @@ class TransformerDecoder(nn.Module):
         self.ln_f = nn.LayerNorm(self.hparams.n_embd)
         self.lm_head = nn.Linear(self.hparams.n_embd, self.hparams.vocab_size)
 
-    def forward(self, idx: Tensor, targets=None) -> Tuple[Tensor, Optional[float]]:
+    def forward(self, idx: Tensor, targets=None) -> tuple[Tensor, Optional[float]]:
         """Forward pass through the Transformer decoder."""
         B, T = idx.shape
 
@@ -250,7 +250,7 @@ class LitMinGPT(L.LightningModule):
 
     def forward(
         self, inputs: Tensor, target: Optional[Tensor]
-    ) -> Tuple[Tensor, Optional[float]]:
+    ) -> tuple[Tensor, Optional[float]]:
         """Forward pass through LightningModule MinGPT."""
         return self.decoder(inputs, target)
 
